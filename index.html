@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rose Day | Eternal Bloom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #e63946;
+            --soft-pink: #ffb3c1;
+            --dark-rose: #800f2f;
+            --glass: rgba(255, 255, 255, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #1a0a0a, #4a0e0e);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Initial Overlay for Music & Animation */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a0a0a; z-index: 999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 1s ease;
+        }
+
+        /* Petals */
+        #petals-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+        .petal {
+            position: absolute; background: #ff4d6d;
+            border-radius: 150% 0 150% 0; opacity: 0.6;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        .container {
+            max-width: 800px; margin: 0 auto; padding: 20px;
+            position: relative; z-index: 1; display: none; /* Hidden until start */
+        }
+
+        header { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 5rem; color: var(--soft-pink); text-shadow: 0 0 20px var(--primary-red); }
+
+        .glass-card {
+            background: var(--glass); backdrop-filter: blur(12px);
+            border-radius: 20px; padding: 30px; margin: 30px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.4s ease; text-align: center;
+        }
+
+        /* Rose Garden */
+        #garden { height: 250px; border: 2px dashed var(--soft-pink); position: relative; cursor: crosshair; overflow: hidden; margin-top: 15px; border-radius: 15px; }
+
+        /* Color Cards */
+        .rose-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+        .rose-item { padding: 20px; border-radius: 15px; cursor: pointer; transition: 0.3s; font-weight: 600; }
+        .rose-item:hover { transform: scale(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+
+        /* Note Generator */
+        #letter-output { font-family: 'Dancing Script', cursive; font-size: 1.6rem; min-height: 80px; margin: 20px 0; color: var(--soft-pink); }
+
+        button {
+            background: var(--primary-red); color: white; border: none; padding: 15px 30px;
+            border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        button:hover { background: #ff4d6d; transform: translateY(-3px); box-shadow: 0 5px 15px var(--primary-red); }
+
+        .heart-trigger { font-size: 80px; cursor: pointer; display: inline-block; animation: pulse 1.5s infinite; position: relative; }
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <h2 style="font-family: 'Dancing Script'; margin-bottom: 20px; font-size: 2.5rem; color: var(--soft-pink);">Ready for a Rose?</h2>
+        <button onclick="startExperience()">Open Your Heart</button>
+    </div>
+
+    <div id="petals-container"></div>
+    <div id="music-container"></div>
+
+    <div class="container" id="main-content">
+        <header>
+            <h1>Happy Rose Day</h1>
+            <p>Every petal is a whisper of my love for you.</p>
+        </header>
+
+        <div class="glass-card">
+            <h2 class="section-title">Plant a Virtual Rose</h2>
+            <p>Tap inside the garden to see love grow</p>
+            <div id="garden"></div>
+        </div>
+
+        <div class="glass-card">
+            <h2 class="section-title">The Language of Colors</h2>
+            <p style="margin-bottom: 15px;">Click a color to see its meaning:</p>
+            <div class="rose-grid">
+                <div class="rose-item" style="background: #e63946;" onclick="showColorMsg('Red', 'Red symbolizes deep love, passion, and longing. You are the fire in my heart!')">Red</div>
+                <div class="rose-item" style="background: #ff8fa3; color: black;" onclick="showColorMsg('Pink', 'Pink represents admiration and joy. Thank you for being so graceful.')">Pink</div>
+                <div class="rose-item" style="background: #ffb703; color: black;" onclick="showColorMsg('Yellow', 'Yellow is for friendship and new beginnings. You are my sunshine!')">Yellow</div>
+                <div class="rose-item" style="background: #ffffff; color: black;" onclick="showColorMsg('White', 'White signifies purity and innocence. Our bond is truly divine.')">White</div>
+            </div>
+            <p id="color-msg" style="margin-top: 20px; font-style: italic; color: var(--soft-pink); min-height: 24px;"></p>
+        </div>
+
+        <div class="glass-card">
+            <h2 class="section-title">A Message for You</h2>
+            <div id="letter-output">Tap the button to reveal a secret...</div>
+            <button onclick="generateLetter()">Reveal Note</button>
+        </div>
+
+        <div class="glass-card">
+            <h2 class="section-title">The Sweetness Jar</h2>
+            <div style="font-size: 4rem; cursor: pointer;" onclick="shakeJar()">🍯</div>
+            <p id="jar-msg" style="margin-top: 15px;">Tap the jar for a compliment</p>
+        </div>
+
+        <div class="glass-card" style="position: relative;">
+            <h2 class="section-title">Touch the Heart</h2>
+            <div class="heart-trigger" onmouseover="spawnHeartRose(event)" onclick="spawnHeartRose(event)">❤️</div>
+            <p>Magic happens when you touch love</p>
+        </div>
+    </div>
+
+    <script>
+        // Error Fix 2: Defined the startExperience function properly
+        function startExperience() {
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                
+                // Fixed Music URL format for Autoplay
+                document.getElementById('music-container').innerHTML = `
+                    <iframe width="0" height="0" 
+                        src="https://www.youtube.com/watch?v=IpFX2vq8HKw&list=RDIpFX2vq8HKw&start_radio=1" 
+                        frameborder="0" allow="autoplay">
+                    </iframe>`;
+                
+                initPetals();
+            }, 1000);
+        }
+
+        // 1. Petals Animation
+        function initPetals() {
+            setInterval(() => {
+                const p = document.createElement('div');
+                p.classList.add('petal');
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.width = p.style.height = (Math.random() * 15 + 10) + 'px';
+                p.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                document.getElementById('petals-container').appendChild(p);
+                setTimeout(() => p.remove(), 5000);
+            }, 300);
+        }
+
+        // 2. Garden Interactivity
+        document.getElementById('garden').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const rose = document.createElement('div');
+            rose.innerHTML = '🌹'; 
+            rose.style.position = 'absolute';
+            rose.style.left = (e.clientX - rect.left - 15) + 'px';
+            rose.style.top = (e.clientY - rect.top - 15) + 'px';
+            rose.style.fontSize = '0px'; 
+            rose.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            e.currentTarget.appendChild(rose);
+            setTimeout(() => rose.style.fontSize = '30px', 50);
+        });
+
+        // 3. Color Messages
+        function showColorMsg(color, msg) {
+            const el = document.getElementById('color-msg');
+            el.style.opacity = 0;
+            setTimeout(() => {
+                el.innerText = msg;
+                el.style.opacity = 1;
+            }, 200);
+        }
+
+        // 4. Notes List
+        const notes = [
+            "Your love is the fragrance that never fades.",
+            "In a garden of people, I'll always pick you.",
+            "You make every day feel like Rose Day.",
+            "My love for you grows more than a thousand roses.",
+            "You are the most beautiful bloom in my life.",
+            "I'm sending this digital rose to the owner of my heart.",
+            "Like a rose, your beauty only gets better with time.",
+            "Thank you for being the thorn-less rose in my life.",
+            "I’d give up a thousand gardens just for one of your smiles.",
+            "Every petal of my heart belongs to you.",
+            "You're not just a flower, you're the whole spring.",
+            "Life with you is a bed of roses (without the thorns!).",
+            "You are the red rose in my monochrome world.",
+            "Even the finest roses envy your grace.",
+            "Happy Rose Day to my favorite person forever."
+        ];
+        function generateLetter() {
+            document.getElementById('letter-output').innerText = notes[Math.floor(Math.random() * notes.length)];
+        }
+
+        // 5. Compliments List
+        const compliments = [
+            "You're stunning!", "Your smile is pure magic.", "You are incredibly kind.", 
+            "You inspire everyone you meet.", "Your soul is as beautiful as a rose.",
+            "You are the definition of elegance.", "You make the world a better place.",
+            "You have the warmest heart I know."
+        ];
+        function shakeJar() {
+            document.getElementById('jar-msg').innerText = compliments[Math.floor(Math.random() * compliments.length)];
+            document.getElementById('jar-msg').style.color = "var(--soft-pink)";
+        }
+
+        // 6. Heart Bloom Feature
+        function spawnHeartRose(e) {
+            const rose = document.createElement('div');
+            rose.innerHTML = '🌹';
+            rose.style.position = 'absolute';
+            rose.style.left = '50%';
+            rose.style.top = '50%';
+            rose.style.fontSize = '20px';
+            rose.style.transition = 'all 2s ease-out';
+            rose.style.pointerEvents = 'none';
+            e.currentTarget.appendChild(rose);
+            
+            setTimeout(() => {
+                rose.style.transform = `translate(${(Math.random()-0.5)*200}px, -300px) rotate(360deg)`;
+                rose.style.opacity = '0';
+            }, 50);
+            setTimeout(() => rose.remove(), 2000);
+        }
+    </script>
+</body>
+</html>
